@@ -14,7 +14,7 @@ Calling the plugin from the theme is done with `{{ github:profile account="blain
 
 Calling the plugin from the theme is done with:
 
-    {{ github:repos account="ericbarnes" }}
+    {{ github:repos account="blainsmith" }}
         <h2>{{ name }}</h2>
         <p>{{ description }}</p>
         <hr />
@@ -24,7 +24,7 @@ Calling the plugin from the theme is done with:
 
 Calling the plugin from the theme is done with:
 
-    {{ github:repo account="ericbarnes" repo="Statamic-GitHub-Plugin" }}
+    {{ github:repo account="blainsmith" repo="Statamic-GitHub-Plugin" }}
         <h1>{{ name }}</h1>
         <p>{{ description }}</p>
     {{ /github:repo }}
