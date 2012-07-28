@@ -7,21 +7,21 @@ class Plugin_github extends Plugin {
     'author'     => 'Blain Smith',
     'author_url' => 'http://blainsmith.com'
   );
-  
+
   function __construct() {
     parent::__construct();
     $this->endpoint_url  = 'https://api.github.com';
     $this->public_url  = 'http://github.com';
     $this->gists_url  = 'http://github.com';
   }
-  
+
   public function profile() {
-    $account  = $this->fetch_param('account', 'statamic');
+    $account = $this->fetch_param('account', 'statamic');
     $gists = $this->fetch_param('gists', true, false, true);
-    
+
     try {
 	    $data = json_decode(file_get_contents($this->endpoint_url . '/users/' . $account));
-	    
+
 	    $output = '<div class="github">
 		    <ul class="profile">
 		    	<li><a href="' . $this->public_url . '/' . $account . '/followers"><span class="count">' . $data->followers . '</span> <span class="label">followers</span></a></li>
@@ -31,33 +31,62 @@ class Plugin_github extends Plugin {
 
 		  $output .= '  </ul>
 		  </div>';
-	    
+
 	    return $output;
 	  } catch(Exception $e) {
 		  return '';
 	  }
   }
 
+  /**
+   * Pull a list of all repos
+   *
+   * Usage:
+   * <pre>
+   * {{ github:repos account="ericbarnes" }}
+	 * {{ name }}
+	 * {{ /github:repo }}
+   * </pre>
+   */
   public function repos() {
     $account  = $this->fetch_param('account', 'statamic');
-
     try {
 	    $data = json_decode(file_get_contents($this->endpoint_url . '/users/' . $account . '/repos'));
-	    
-	    $output = '<div class="github">
-		    <ul class="repos">';
-		    
-		  for($r = 0; $r < sizeof($data); $r++) {
-		    $output .= '  	<li><a href="' . $data[$r]->html_url . '">' . $data[$r]->name . '</a></li>';
-		  }
-		  
-		  $output .= '  </ul>
-		  </div>';
-	    
-	    return $output;
+
+	    foreach ($data as $key => $item) {
+	    	$ret[$key] = get_object_vars($item);
+	    }
+
+	    return $this->parse_loop($this->content, $ret);
+
 	  } catch(Exception $e) {
 		  return '';
 	  }
   }
-    
+
+  /**
+   * Pull a single github repo
+   *
+   * Usage:
+   * <pre>
+   * {{ github:repo account="ericbarnes" name="Statamic-GitHub-Plugin" }}
+	 * {{ description }}
+	 * {{ /github:repo }}
+   * </pre>
+   */
+  public function repo() {
+  	$account = $this->fetch_param('account', 'statamic');
+  	$repo = $this->fetch_param('repo', 'Plugin-Dribbble');
+  	try {
+	    $data = json_decode(file_get_contents($this->endpoint_url . '/repos/' . $account.'/'.$repo));
+	    // Convert the object into a multi dimension array so we can use it in a loop.
+	   	$data = array(0 => (array) $data);
+
+	   	return $this->parse_loop($this->content, $data);
+
+	  } catch(Exception $e) {
+		  return '';
+	  }
+  }
+
 }
