@@ -13,6 +13,7 @@ Calling the plugin from the theme is done with `{{ github:profile account="blain
 ## Repos Usage
 
 Calling the plugin from the theme is done with:
+
     {{ github:repos account="ericbarnes" }}
         <h2>{{ name }}</h2>
         <p>{{ description }}</p>
