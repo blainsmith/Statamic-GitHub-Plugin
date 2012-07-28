@@ -16,7 +16,7 @@ class Plugin_github extends Plugin {
   }
 
   public function profile() {
-    $account  = $this->fetch_param('account', 'statamic');
+    $account = $this->fetch_param('account', 'statamic');
     $gists = $this->fetch_param('gists', true, false, true);
 
     try {
@@ -38,6 +38,16 @@ class Plugin_github extends Plugin {
 	  }
   }
 
+  /**
+   * Pull a list of all repos
+   *
+   * Usage:
+   * <pre>
+   * {{ github:repos account="ericbarnes" }}
+	 * {{ name }}
+	 * {{ /github:repo }}
+   * </pre>
+   */
   public function repos() {
     $account  = $this->fetch_param('account', 'statamic');
     try {
@@ -48,6 +58,31 @@ class Plugin_github extends Plugin {
 	    }
 
 	    return $this->parse_loop($this->content, $ret);
+
+	  } catch(Exception $e) {
+		  return '';
+	  }
+  }
+
+  /**
+   * Pull a single github repo
+   *
+   * Usage:
+   * <pre>
+   * {{ github:repo account="ericbarnes" name="Statamic-GitHub-Plugin" }}
+	 * {{ description }}
+	 * {{ /github:repo }}
+   * </pre>
+   */
+  public function repo() {
+  	$account = $this->fetch_param('account', 'statamic');
+  	$repo = $this->fetch_param('repo', 'Plugin-Dribbble');
+  	try {
+	    $data = json_decode(file_get_contents($this->endpoint_url . '/repos/' . $account.'/'.$repo));
+	    // Convert the object into a multi dimension array so we can use it in a loop.
+	   	$data = array(0 => (array) $data);
+
+	   	return $this->parse_loop($this->content, $data);
 
 	  } catch(Exception $e) {
 		  return '';

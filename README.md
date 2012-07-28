@@ -12,4 +12,19 @@ Calling the plugin from the theme is done with `{{ github:profile account="blain
 
 ## Repos Usage
 
-Calling the plugin from the theme is done with `{{ github:repos account="blainsmith" }}`.
+Calling the plugin from the theme is done with:
+	{{ github:repos account="ericbarnes" }}
+		<h2>{{ name }}</h2>
+		<p>{{ description }}</p>
+		<hr />
+	{{ /github:repos }}
+
+## Single Repo
+
+Calling the plugin from the theme is done with:
+	{{ github:repo account="ericbarnes" repo="Statamic-GitHub-Plugin" }}
+		<h1>{{ name }}</h1>
+		<p>{{ description }}</p>
+	{{ /github:repo }}
+
+_For Repos please see github's api docs for full [response data](http://developer.github.com/v3/repos/)_
