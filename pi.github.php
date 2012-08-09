@@ -39,7 +39,7 @@ class Plugin_github extends Plugin {
   }
 
   /**
-   * Pull a list of all repos
+   * Pull a list of repos
    *
    * Usage:
    * <pre>
@@ -49,9 +49,19 @@ class Plugin_github extends Plugin {
    * </pre>
    */
   public function repos() {
-    $account  = $this->fetch_param('account', 'statamic');
+    $account = $this->fetch_param('account', 'statamic');
+    $type = $this->fetch_param('type', '');
+    $sort = $this->fetch_param('sort', '');
+    $direction = $this->fetch_param('direction', '');
+    
+    $params = array();
+    if($type != ''){ array_push($params, 'type=' . $type); }
+    if($sort != ''){ array_push($params, 'sort=' . $sort); }
+    if($direction != ''){ array_push($params, 'direction=' . $direction); }
+    $params = implode("&", $params);
+    
     try {
-	    $data = json_decode(file_get_contents($this->endpoint_url . '/users/' . $account . '/repos'));
+	    $data = json_decode(file_get_contents($this->endpoint_url . '/users/' . $account . '/repos?' . $params));
 
 	    foreach ($data as $key => $item) {
 	    	$ret[$key] = get_object_vars($item);

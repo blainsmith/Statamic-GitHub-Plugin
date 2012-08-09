@@ -14,7 +14,7 @@ Calling the plugin from the theme is done with `{{ github:profile account="blain
 
 Calling the plugin from the theme is done with:
 
-    {{ github:repos account="blainsmith" }}
+    {{ github:repos account="blainsmith" type="all|owner|public|private|member" sort="created|updated|pushed|full_name" direction="asc|desc" }}
         <h2>{{ name }}</h2>
         <p>{{ description }}</p>
         <hr />
