@@ -3,7 +3,7 @@ class Plugin_github extends Plugin {
 
   var $meta = array(
     'name'       => 'GitHub',
-    'version'    => '0.1',
+    'version'    => '0.2',
     'author'     => 'Blain Smith',
     'author_url' => 'http://blainsmith.com'
   );
@@ -43,7 +43,7 @@ class Plugin_github extends Plugin {
    *
    * Usage:
    * <pre>
-   * {{ github:repos account="ericbarnes" }}
+   * {{ github:repos account="blainsmith" type="all|owner|public|private|member" sort="created|updated|pushed|full_name" direction="asc|desc" }}
 	 * {{ name }}
 	 * {{ /github:repo }}
    * </pre>
@@ -79,7 +79,7 @@ class Plugin_github extends Plugin {
    *
    * Usage:
    * <pre>
-   * {{ github:repo account="ericbarnes" name="Statamic-GitHub-Plugin" }}
+   * {{ github:repo account="blainsmith" name="Statamic-GitHub-Plugin" }}
 	 * {{ description }}
 	 * {{ /github:repo }}
    * </pre>
