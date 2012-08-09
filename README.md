@@ -6,6 +6,8 @@ Statamic GitHub Plugin
 2. Ensure the folder name is `github` (Github timestamps the download folder).
 3. Enjoy.
 
+_NOTE: Default param values are bold._
+
 ## Profile Usage
 
 Calling the plugin from the theme is done with `{{ github:profile account="blainsmith" gists="yes|no" }}`.
@@ -14,7 +16,7 @@ Calling the plugin from the theme is done with `{{ github:profile account="blain
 
 Calling the plugin from the theme is done with:
 
-    {{ github:repos account="blainsmith" type="all|owner|public|private|member" sort="created|updated|pushed|full_name" direction="asc|desc" }}
+    {{ github:repos account="blainsmith" type="*all*|owner|public|private|member" sort="created|updated|pushed|*full_name*" direction="asc|desc" }}
         <h2>{{ name }}</h2>
         <p>{{ description }}</p>
         <hr />
@@ -29,4 +31,4 @@ Calling the plugin from the theme is done with:
         <p>{{ description }}</p>
     {{ /github:repo }}
 
-_For Repos please see github's api docs for full [response data](http://developer.github.com/v3/repos/)_
+_For Repos please see [GitHub's Repos' API docs](http://developer.github.com/v3/repos/) for full response data._
