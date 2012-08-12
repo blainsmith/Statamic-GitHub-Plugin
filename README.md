@@ -10,7 +10,7 @@ _NOTE: Default param values are bold._
 
 ## Profile Usage
 
-Calling the plugin from the theme is done with `{{ github:profile account="blainsmith" gists="yes|no" }}`.
+Calling the plugin from the theme is done with `{{ github:profile account="blainsmith" gists="yes|no" raw="yes|no" }}`.
 
 ## Repos Usage
 
