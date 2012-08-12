@@ -20,9 +20,9 @@ class Plugin_github extends Plugin {
    *
    * Usage:
    * <pre>
-   * {{ github:repos account="blainsmith" gists="yes|*no*" raw="yes|*no*" }}
-   * {{ name }}
-   * {{ /github:repo }}
+   * {{ github:profile account="blainsmith" gists="yes|*no*" raw="yes|*no*" }}
+   * {{ output }}
+   * {{ /github:profile }}
    * </pre>
    */
   public function profile() {
@@ -65,7 +65,7 @@ class Plugin_github extends Plugin {
    * <pre>
    * {{ github:repos account="blainsmith" type="all|owner|public|private|member" sort="created|updated|pushed|full_name" direction="asc|desc" }}
 	 * {{ name }}
-	 * {{ /github:repo }}
+	 * {{ /github:repos }}
    * </pre>
    */
   public function repos() {
