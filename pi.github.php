@@ -15,24 +15,44 @@ class Plugin_github extends Plugin {
     $this->gists_url  = 'http://github.com';
   }
 
+  /**
+   * Pull a profile
+   *
+   * Usage:
+   * <pre>
+   * {{ github:repos account="blainsmith" gists="yes|*no*" raw="yes|*no*" }}
+   * {{ name }}
+   * {{ /github:repo }}
+   * </pre>
+   */
   public function profile() {
     $account = $this->fetch_param('account', 'statamic');
     $gists = $this->fetch_param('gists', true, false, true);
+    $raw = $this->fetch_param('raw', '');
+
+    if($raw == '') { $raw = 'no'; }
 
     try {
 	    $data = json_decode(file_get_contents($this->endpoint_url . '/users/' . $account));
 
-	    $output = '<div class="github">
-		    <ul class="profile">
-		    	<li><a href="' . $this->public_url . '/' . $account . '/followers"><span class="count">' . $data->followers . '</span> <span class="label">followers</span></a></li>
-		    	<li><a href="' . $this->public_url . '/' . $account . '"><span class="count">' . $data->public_repos . '</span> <span class="label">public repos</span></a></li>';
+      if($raw == 'no') {
+  	    $output = '<div class="github">
+  		    <ul class="profile">
+  		    	<li><a href="' . $this->public_url . '/' . $account . '/followers"><span class="count">' . $data->followers . '</span> <span class="label">followers</span></a></li>
+  		    	<li><a href="' . $this->public_url . '/' . $account . '"><span class="count">' . $data->public_repos . '</span> <span class="label">public repos</span></a></li>';
 
-		  if($gists) $output .= '  	<li><a href="' . $this->gists_url . '/' . $account . '"><span class="count">' . $data->public_gists . '</span> <span class="label">public gists</span></a></li>';
+  		  if($gists) $output .= '  	<li><a href="' . $this->gists_url . '/' . $account . '"><span class="count">' . $data->public_gists . '</span> <span class="label">public gists</span></a></li>';
 
-		  $output .= '  </ul>
-		  </div>';
+  		  $output .= '  </ul>
+  		  </div>';
 
-	    return $output;
+        return $output;
+      }
+      else {
+        $data = array(0 => (array) $data);
+
+        return $this->parse_loop($this->content, $data);        
+      }
 	  } catch(Exception $e) {
 		  return '';
 	  }
@@ -66,6 +86,7 @@ class Plugin_github extends Plugin {
 	    foreach ($data as $key => $item) {
 	    	$ret[$key] = get_object_vars($item);
 	    }
+
 
 	    return $this->parse_loop($this->content, $ret);
 
