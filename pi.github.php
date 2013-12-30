@@ -20,22 +20,22 @@ class Plugin_github extends Plugin {
     $gists = $this->fetch_param('gists', true, false, true);
 
     try {
-	    $data = json_decode(file_get_contents($this->endpoint_url . '/users/' . $account));
+      $data = json_decode($this->_curl($this->endpoint_url . '/users/' . $account));
 
-	    $output = '<div class="github">
-		    <ul class="profile">
-		    	<li><a href="' . $this->public_url . '/' . $account . '/followers"><span class="count">' . $data->followers . '</span> <span class="label">followers</span></a></li>
-		    	<li><a href="' . $this->public_url . '/' . $account . '"><span class="count">' . $data->public_repos . '</span> <span class="label">public repos</span></a></li>';
+      $output = '<div class="github">
+        <ul class="profile">
+          <li><a href="' . $this->public_url . '/' . $account . '/followers"><span class="count">' . $data->followers . '</span> <span class="label">followers</span></a></li>
+          <li><a href="' . $this->public_url . '/' . $account . '"><span class="count">' . $data->public_repos . '</span> <span class="label">public repos</span></a></li>';
 
-		  if($gists) $output .= '  	<li><a href="' . $this->gists_url . '/' . $account . '"><span class="count">' . $data->public_gists . '</span> <span class="label">public gists</span></a></li>';
+      if($gists) $output .= '   <li><a href="' . $this->gists_url . '/' . $account . '"><span class="count">' . $data->public_gists . '</span> <span class="label">public gists</span></a></li>';
 
-		  $output .= '  </ul>
-		  </div>';
+      $output .= '  </ul>
+      </div>';
 
-	    return $output;
-	  } catch(Exception $e) {
-		  return '';
-	  }
+      return $output;
+    } catch(Exception $e) {
+      return '';
+    }
   }
 
   /**
@@ -44,8 +44,8 @@ class Plugin_github extends Plugin {
    * Usage:
    * <pre>
    * {{ github:repos account="blainsmith" type="all|owner|public|private|member" sort="created|updated|pushed|full_name" direction="asc|desc" }}
-	 * {{ name }}
-	 * {{ /github:repo }}
+   * {{ name }}
+   * {{ /github:repo }}
    * </pre>
    */
   public function repos() {
@@ -61,17 +61,17 @@ class Plugin_github extends Plugin {
     $params = implode("&", $params);
     
     try {
-	    $data = json_decode(file_get_contents($this->endpoint_url . '/users/' . $account . '/repos?' . $params));
+      $data = json_decode($this->_curl($this->endpoint_url . '/users/' . $account . '/repos?' . $params));
 
-	    foreach ($data as $key => $item) {
-	    	$ret[$key] = get_object_vars($item);
-	    }
+      foreach ($data as $key => $item) {
+        $ret[$key] = get_object_vars($item);
+      }
 
-	    return $this->parse_loop($this->content, $ret);
+      return $this->parse_loop($this->content, $ret);
 
-	  } catch(Exception $e) {
-		  return '';
-	  }
+    } catch(Exception $e) {
+      return '';
+    }
   }
 
   /**
@@ -80,23 +80,34 @@ class Plugin_github extends Plugin {
    * Usage:
    * <pre>
    * {{ github:repo account="blainsmith" name="Statamic-GitHub-Plugin" }}
-	 * {{ description }}
-	 * {{ /github:repo }}
+   * {{ description }}
+   * {{ /github:repo }}
    * </pre>
    */
   public function repo() {
-  	$account = $this->fetch_param('account', 'statamic');
-  	$repo = $this->fetch_param('repo', 'Plugin-Dribbble');
-  	try {
-	    $data = json_decode(file_get_contents($this->endpoint_url . '/repos/' . $account.'/'.$repo));
-	    // Convert the object into a multi dimension array so we can use it in a loop.
-	   	$data = array(0 => (array) $data);
+    $account = $this->fetch_param('account', 'statamic');
+    $repo = $this->fetch_param('repo', 'Plugin-Dribbble');
+    //try {
+      $data = json_decode($this->_curl($this->endpoint_url . '/repos/' . $account.'/'.$repo));
+      // Convert the object into a multi dimension array so we can use it in a loop.
+      $data = array(0 => (array) $data);
 
-	   	return $this->parse_loop($this->content, $data);
+      return $this->parse_loop($this->content, $data);
 
-	  } catch(Exception $e) {
-		  return '';
-	  }
+    // } catch(Exception $e) {
+    //   return '';
+    // }
+  }
+
+  private function _curl($url) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch,CURLOPT_USERAGENT, 'Statamic GitHub Plugin (https://github.com/blainsmith/Statamic-GitHub-Plugin)');
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    return $response;
   }
 
 }
