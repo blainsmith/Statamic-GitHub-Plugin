@@ -53,13 +53,13 @@ class Plugin_github extends Plugin {
     $type = $this->fetch_param('type', '');
     $sort = $this->fetch_param('sort', '');
     $direction = $this->fetch_param('direction', '');
-    
+
     $params = array();
     if($type != ''){ array_push($params, 'type=' . $type); }
     if($sort != ''){ array_push($params, 'sort=' . $sort); }
     if($direction != ''){ array_push($params, 'direction=' . $direction); }
     $params = implode("&", $params);
-    
+
     try {
       $data = json_decode($this->_curl($this->endpoint_url . '/users/' . $account . '/repos?' . $params));
 
@@ -67,7 +67,7 @@ class Plugin_github extends Plugin {
         $ret[$key] = get_object_vars($item);
       }
 
-      return $this->parse_loop($this->content, $ret);
+      return Parse::tagLoop($this->content, $ret);
 
     } catch(Exception $e) {
       return '';
@@ -92,7 +92,7 @@ class Plugin_github extends Plugin {
       // Convert the object into a multi dimension array so we can use it in a loop.
       $data = array(0 => (array) $data);
 
-      return $this->parse_loop($this->content, $data);
+      return Parse::tagLoop($this->content, $data);
 
     // } catch(Exception $e) {
     //   return '';
